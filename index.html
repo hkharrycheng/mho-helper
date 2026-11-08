@@ -159,6 +159,20 @@
   .relc .ri img{width:100%;height:100%;object-fit:cover;display:block}
   .relc .rn{padding:5px 6px 6px;font-size:11px;line-height:1.3;color:#dbe4ef;word-break:break-word}
   .relc .rv{color:var(--muted);font-size:10px}
+  /* 圖鑑 gallery + 放大檢視 */
+  .galgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+  .gal{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#111722;aspect-ratio:1/1;cursor:zoom-in;position:relative}
+  .gal img{width:100%;height:100%;object-fit:cover;display:block}
+  .gal .zi{position:absolute;right:5px;bottom:5px;background:rgba(10,14,20,.8);border:1px solid var(--line);border-radius:7px;font-size:11px;padding:1px 5px;color:#cfd8e3}
+  .galhint{color:var(--muted);font-size:11px;margin-top:7px}
+  .lb{position:fixed;inset:0;z-index:60;background:rgba(4,7,12,.97);display:none;flex-direction:column}
+  .lb.show{display:flex}
+  .lb .lbbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;font-size:12px;color:var(--muted)}
+  .lb .lbbar button{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:7px 12px;font-size:12.5px;cursor:pointer}
+  .lb .lbnav{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;justify-content:space-between;padding:0 10px;pointer-events:none}
+  .lb .lbnav div{pointer-events:auto;width:38px;height:38px;border-radius:50%;background:rgba(21,26,35,.9);border:1px solid var(--line);color:#e6edf5;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer}
+  .lb .lbwrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:auto;padding:0 8px 14px}
+  .lb .lbwrap img{max-width:100%;max-height:100%;object-fit:contain;display:block}
   /* header 右上角資料來源 */
   .hdr-top{justify-content:space-between;align-items:flex-start}
   .brand{display:flex;align-items:center;gap:8px;min-width:0}
@@ -246,6 +260,12 @@
 <div class="ov" id="ov">
   <div class="bar"><button id="ovBack">← 返回</button><div class="ttl" id="ovTtl"></div></div>
   <div class="body" id="ovBody"></div>
+</div>
+
+<div class="lb" id="lb">
+  <div class="lbbar"><button id="lbBack">← 返回</button><span id="lbCnt"></span><span style="width:66px"></span></div>
+  <div class="lbwrap"><img id="lbImg" alt=""></div>
+  <div class="lbnav"><div id="lbPrev">‹</div><div id="lbNext">›</div></div>
 </div>
 
 <script>
@@ -465,6 +485,15 @@
       h += '<div class="sect"><h3>難打的魔物 <span>'+(a.hardMon||[]).length+' 隻</span></h3>'+
         (a.hardMon&&a.hardMon.length ? relCards('mon', a.hardMon, false) : '<div class="empty">暫無資料</div>')+'</div>';
     }
+
+    galList = (a.gallery || []).slice();
+    if(galList.length){
+      h += '<div class="sect"><h3>圖鑑 <span>'+galList.length+' 張</span></h3>'+
+        '<div class="galgrid">'+galList.map(function(g,i){
+          return '<div class="gal" data-gal="'+i+'"><img loading="lazy" src="'+esc(g)+'" alt=""><span class="zi">放大</span></div>';
+        }).join('')+'</div>'+
+        '<div class="galhint">按圖可放大觀看'+(galList.length>1?'，可左右切換':'')+'</div></div>';
+    }
     showOverlay(a.name, h);
   }
 
@@ -643,6 +672,25 @@
 
   /* ---------- overlay ---------- */
   var ovStack = [];
+  var galList = [], galIdx = 0;
+  function openLB(i){
+    if(!galList.length) return;
+    galIdx = Math.max(0, Math.min(galList.length - 1, i));
+    document.getElementById('lbImg').src = galList[galIdx];
+    document.getElementById('lbCnt').textContent = (galIdx+1)+' / '+galList.length;
+    var multi = galList.length > 1;
+    document.getElementById('lbPrev').style.visibility = multi ? 'visible' : 'hidden';
+    document.getElementById('lbNext').style.visibility = multi ? 'visible' : 'hidden';
+    document.getElementById('lb').classList.add('show');
+  }
+  function closeLB(){ document.getElementById('lb').classList.remove('show'); }
+  document.getElementById('lbBack').addEventListener('click', closeLB);
+  document.getElementById('lbPrev').addEventListener('click', function(e){ e.stopPropagation(); openLB(galIdx-1); });
+  document.getElementById('lbNext').addEventListener('click', function(e){ e.stopPropagation(); openLB(galIdx+1); });
+  document.getElementById('lbImg').addEventListener('click', function(e){ e.stopPropagation(); });
+  document.getElementById('lb').addEventListener('click', function(e){
+    if(e.target.id === 'lb' || (e.target.className||'').indexOf('lbwrap') === 0) closeLB();
+  });
   function showOverlay(title, html){
     var ov = document.getElementById('ov');
     ovStack.push({t:title, h:html});
@@ -655,6 +703,7 @@
   function hideOverlay(){
     var ov = document.getElementById('ov');
     ovStack = [];
+    closeLB();
     ov.classList.remove('show');
     document.body.style.overflow = '';
   }
@@ -731,6 +780,8 @@
         }
         return;
       }
+      var g = e.target.closest('[data-gal]');
+      if(g && !e.target.closest('#lb')) { openLB(+g.getAttribute('data-gal')); return; }
       var c = e.target.closest('[data-adv],[data-gear],[data-mon]');
       if(!c) return;
       if(e.target.closest('a')) return;

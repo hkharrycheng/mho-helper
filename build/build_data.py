@@ -108,6 +108,11 @@ def team_of(rid):
 
 
 adv = []
+_gal = {}
+for f in os.listdir(IMG):
+    m = __import__("re").match(r"^(rec\w*)_gal(\d+)(\.[A-Za-z0-9]+)$", f)
+    if m:
+        _gal.setdefault(m.group(1), []).append((int(m.group(2)), "images/" + f))
 for r in adventurers:
     rid = r["record_id"]
     adv.append({
@@ -120,6 +125,7 @@ for r in adventurers:
         "trailer": r.get("Official Trailer") or "",
         "guide": r.get("攻略") or "",
         "img": image_map.get(rid),
+        "gallery": [p for _, p in sorted(_gal.get(rid, []))],
         "weapons": [G[i] for i in [x["id"] for x in (r.get("武器") or [])] if i in G],
         "armors": [G[i] for i in [x["id"] for x in (r.get("防具") or [])] if i in G],
         "pals": [P[i] for i in [x["id"] for x in (r.get("隨從") or [])] if i in P],
@@ -198,7 +204,7 @@ for m in mon:
 
 data = {
     "app": "MHO 魔物獵人：旅人助手",
-    "version": "2026.1.07",    "base": "RhuZbZCs0aJhdDsKvMicds5Hn0d",
+    "version": "2026.1.08",    "base": "RhuZbZCs0aJhdDsKvMicds5Hn0d",
     "generated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
     "counts": {"adventurers": len(adv), "weapons": sum(1 for g in gear if g["kind"] == "weapon"),
                "armors": sum(1 for g in gear if g["kind"] == "armor"), "monsters": len(mon), "pals": len(pals)},
