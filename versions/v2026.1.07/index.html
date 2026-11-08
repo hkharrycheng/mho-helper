@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>魔物獵人 旅人助手（J17）</title>
+<link rel="icon" type="image/jpeg" href="images/logo.jpg">
+<link rel="shortcut icon" href="images/logo.jpg">
+<link rel="apple-touch-icon" href="images/logo.jpg">
+<meta name="theme-color" content="#0b0e14">
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#151a23; --panel2:#1b2230; --line:#232b38;
+    --text:#d7dee8; --muted:#8b949e; --accent:#58a6ff;
+    --fire:#ff7a45; --water:#4aa8ff; --thunder:#f5d76e; --ice:#7fe0ff; --dragon:#b58cff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang HK","Microsoft JhengHei",sans-serif;
+    font-size:14px;line-height:1.5}
+  a{color:var(--accent);text-decoration:none}
+  .wrap{max-width:760px;margin:0 auto;padding:0 12px 78px}
+  header.hdr{padding:16px 2px 10px}
+  .hdr-top{display:flex;align-items:center;gap:8px}
+  .hdr h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.5px}
+  .badge{font-size:11px;padding:2px 6px;border:1px solid var(--line);border-radius:6px;color:var(--muted)}
+  .hdr .sub{color:var(--muted);font-size:12px;margin-top:5px;display:flex;gap:10px;flex-wrap:wrap}
+  .hdr .sub b{color:var(--text);font-weight:600}
+  .qbar{position:relative;margin:4px 0 8px}
+  .qbar input{width:100%;padding:11px 12px 11px 34px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel);color:var(--text);font-size:14px;outline:none}
+  .qbar input::placeholder{color:#5b6675}
+  .qbar input:focus{border-color:#2f6fb3}
+  .qbar .ico{position:absolute;left:11px;top:11px;color:var(--muted);font-size:14px}
+  .frow{display:flex;gap:6px;overflow-x:auto;padding:3px 0 5px;scrollbar-width:none}
+  .fg{display:flex;gap:6px;flex:0 0 auto;overflow-x:auto;scrollbar-width:none}
+  #fGearExtra{display:block}
+  #fGearExtra .fg{margin-bottom:2px}
+  .frow::-webkit-scrollbar{display:none}
+  .frow .lbl{color:#5b6675;font-size:12px;align-self:center;flex:0 0 auto;padding-right:2px}
+  .chip{flex:0 0 auto;padding:5px 10px;border-radius:999px;border:1px solid var(--line);
+    background:var(--panel);color:var(--muted);font-size:12.5px;cursor:pointer;white-space:nowrap}
+  .chip.on{background:#123052;border-color:#2f6fb3;color:#9fd0ff}
+  .count{color:var(--muted);font-size:12px;margin:6px 2px 8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:8px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;
+    display:flex;flex-direction:column}
+  .card:active{transform:scale(.985)}
+  .thumb{aspect-ratio:1/1;background:radial-gradient(circle at 50% 40%,#1d2635,#111722);
+    display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .thumb img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+  .thumb .ph{font-size:30px;opacity:.55}
+  .card .bd{padding:7px 8px 9px}
+  .card .nm{font-size:13px;font-weight:600;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card .mt{color:var(--muted);font-size:11.5px;margin-top:3px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+  .tg{font-size:10.5px;padding:1px 6px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
+  .tg.el-fire{color:var(--fire);border-color:#5a2e22;background:#2a1611}
+  .tg.el-water{color:var(--water);border-color:#1e3f5c;background:#101d2a}
+  .tg.el-thunder{color:var(--thunder);border-color:#55502a;background:#26240f}
+  .tg.el-ice{color:var(--ice);border-color:#245055;background:#0f2427}
+  .tg.el-dragon{color:var(--dragon);border-color:#412f5c;background:#1c1428}
+  .tg.role{color:#9fd0ff;border-color:#24405c;background:#101d2a}
+  .sec-title{font-size:12px;color:var(--muted);letter-spacing:1px;margin:16px 2px 8px;text-transform:uppercase}
+  .mon-weak{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
+  .mon-weak i{width:6px;height:6px;border-radius:50%;background:#38414f;display:block}
+  .mon-weak i.w3{background:#f85149}.mon-weak i.w2{background:#f0b429}.mon-weak i.w1{background:#3fb950}
+  footer{color:#5b6675;font-size:11px;text-align:center;padding:18px 8px 4px;line-height:1.7}
+  /* bottom nav */
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(13,17,23,.96);
+    backdrop-filter:blur(8px);border-top:1px solid var(--line)}
+  nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);
+    padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  .tab{background:none;border:0;color:var(--muted);font-size:12px;padding:6px 2px;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit}
+  .tab .ti{font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;height:22px}
+  .tab .ti img{width:22px;height:22px;border-radius:50%;object-fit:cover;display:block;background:#111722}
+  .tab.on .ti img{box-shadow:0 0 0 2px var(--accent)}
+  .tab.on{color:var(--accent)}
+  /* detail overlay */
+  .ov{position:fixed;inset:0;z-index:40;background:var(--bg);overflow-y:auto;display:none}
+  .ov.show{display:block}
+  .ov .bar{position:sticky;top:0;z-index:5;background:rgba(11,14,20,.95);backdrop-filter:blur(8px);
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .ov .bar button{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:8px;
+    padding:6px 11px;font-size:13px;cursor:pointer;font-family:inherit}
+  .ov .bar .ttl{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ov .body{max-width:760px;margin:0 auto;padding:12px 12px 40px}
+  .hero{display:flex;gap:12px;align-items:flex-start}
+  .hero .im{width:120px;height:120px;flex:0 0 auto;border-radius:12px;background:radial-gradient(circle at 50% 40%,#1d2635,#111722);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line)}
+  .hero .im img{max-width:100%;max-height:100%;object-fit:contain}
+  .hero .im .ph{font-size:38px;opacity:.5}
+  .hero .info{min-width:0;flex:1}
+  .hero .info h2{margin:0;font-size:20px;font-weight:700}
+  .hero .info .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+  .hero .info .meta{color:var(--muted);font-size:12px;margin-top:7px;line-height:1.7}
+  .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:9px;border:1px solid #24405c;
+    background:#101d2a;color:#9fd0ff;font-size:12.5px}
+  .sect{margin-top:16px}
+  .sect h3{margin:0 0 8px;font-size:14px;color:#e6edf5;display:flex;align-items:center;gap:7px}
+  .sect h3 span{font-size:11px;color:var(--muted);font-weight:400}
+  .rows{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;gap:10px;cursor:pointer}
+  .row .rim{width:56px;height:56px;flex:0 0 auto;border-radius:9px;background:#111722;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .row .rim img{max-width:100%;max-height:100%;object-fit:contain}
+  .row .rim .ph{font-size:22px;opacity:.5}
+  .row .rb{min-width:0;flex:1}
+  .row .rrn{font-size:13.5px;font-weight:600}
+  .row .rmt{color:var(--muted);font-size:11.5px;margin-top:3px}
+  .row .rsk{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+  .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-top:12px}
+  .stat div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+  .stat .k{color:var(--muted);font-size:11px}
+  .stat .v{font-size:15px;font-weight:600;margin-top:2px;word-break:break-word}
+  .kv{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:11px 12px;font-size:13px;line-height:1.75;color:#c6cfda}
+  .kv b{color:#e6edf5}
+  .wstar{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed #1c2431}
+  .wstar:last-child{border-bottom:0}
+  .wstar .en{width:26px;font-size:13px;font-weight:600}
+  .wstar .dots{display:flex;gap:5px}
+  .wstar .dots i{width:16px;height:16px;border-radius:4px;background:#222b38;display:block}
+  .wstar .dots i.on3{background:#f85149}.wstar .dots i.on2{background:#f0b429}.wstar .dots i.on1{background:#3fb950}
+  .wstar .txt{color:var(--muted);font-size:11.5px;margin-left:auto}
+  .empty{color:var(--muted);font-size:12.5px;text-align:center;padding:26px 10px;border:1px dashed var(--line);border-radius:11px}
+  .empty .rst{display:inline-block;margin-top:12px;cursor:pointer;border:1px solid var(--line);color:var(--text)}
+  .effs{display:flex;flex-wrap:wrap;gap:10px}
+  .eff{display:flex;align-items:center;gap:8px;background:var(--panel2,#10151d);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:12.5px}
+  .eff .lb{color:var(--muted)}
+  .effc{font-weight:600;padding:2px 8px;border-radius:999px;font-size:12px}
+  .effc.good{color:#3fb950;background:rgba(63,185,80,.12);border:1px solid rgba(63,185,80,.35)}
+  .effc.bad{color:#f85149;background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.35)}
+  .effc.mid{color:#f0b429;background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.35)}
+  .effc.gray{color:var(--muted);border:1px solid var(--line)}
+  /* matrix 表：屬性／異常／道具／咆哮／肉質 統一格式 */
+  .mx{background:var(--panel);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+  .mx .mgh{padding:6px 11px;font-size:11px;letter-spacing:.8px;color:var(--muted);background:rgba(255,255,255,.035);border-bottom:1px solid var(--line)}
+  .mx .mgh+.mgh{border-top:1px solid var(--line)}
+  .mx .mr{display:flex;align-items:center;gap:9px;padding:7px 11px;border-bottom:1px solid rgba(255,255,255,.05)}
+  .mx .mr:last-child{border-bottom:0}
+  .mx .mlb{width:46px;flex:0 0 auto;font-size:12.5px;font-weight:600;color:#e6edf5}
+  .mx .dots{display:flex;gap:4px}
+  .mx .dots i{width:15px;height:15px;border-radius:4px;background:#222b38;display:block}
+  .mx .dots i.on3{background:#f85149}.mx .dots i.on2{background:#f0b429}.mx .dots i.on1{background:#3fb950}
+  .mx .mrt{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
+  .mx .pgrp{display:flex;align-items:center;gap:4px}
+  .mx .pgrp .pl{font-size:10.5px;color:var(--muted);margin-left:2px}
+  .mx .mr.sm{gap:5px;padding:7px 9px}
+  .mx .mr.sm .mlb{width:38px;font-size:12px}
+  .mx .mr.sm .dots{gap:3px}
+  .mx .mr.sm .dots i{width:11px;height:11px;border-radius:3px}
+  .mx .mr.sm .pgrp .pl{font-size:9.5px;margin-left:0}
+  .mx .mr.sm .mrt{font-size:10.5px}
+  /* 冒險者 <-> 魔物 互聯 */
+  .rel{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+  .relc{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer}
+  .relc .ri{width:100%;aspect-ratio:1/1;background:#111722;overflow:hidden}
+  .relc .ri img{width:100%;height:100%;object-fit:cover;display:block}
+  .relc .rn{padding:5px 6px 6px;font-size:11px;line-height:1.3;color:#dbe4ef;word-break:break-word}
+  .relc .rv{color:var(--muted);font-size:10px}
+  /* header 右上角資料來源 */
+  .hdr-top{justify-content:space-between;align-items:flex-start}
+  .brand{display:flex;align-items:center;gap:8px;min-width:0}
+  .brand .lg{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#111722;flex:0 0 auto}
+  .srcbox{text-align:right;font-size:10.5px;line-height:1.75;color:var(--muted);max-width:60%}
+  .srcbox .u{word-break:break-all}
+  /* news */
+  .nday{margin-top:14px}
+  .nday .dh{color:var(--muted);font-size:12px;margin:0 2px 7px;display:flex;justify-content:space-between}
+  .ncard{display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px;margin-bottom:8px}
+  .ncard .ni{width:86px;height:86px;flex:0 0 auto;border-radius:9px;overflow:hidden;background:#111722}
+  .ncard .ni img{width:100%;height:100%;object-fit:cover;display:block}
+  .ncard .nb{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+  .ncard .nt{font-size:13.5px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .ncard .nm2{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:auto}
+  .ncard .cat{font-size:10.5px;padding:1px 6px;border-radius:5px;background:#123052;color:#9fd0ff;border:1px solid #24405c}
+  .ncard .src{font-size:10.5px;color:var(--muted)}
+  .ncard .go{margin-left:auto;font-size:11.5px;color:var(--accent)}
+  .load{padding:40px 0;text-align:center;color:var(--muted);font-size:13px}
+  .err{padding:24px;text-align:center;color:#f0b429;font-size:13px;line-height:1.8}
+  .err a{display:inline-block;margin-top:10px}
+  .nosrc{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:14px;color:var(--muted);font-size:12.5px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hdr">
+    <div class="hdr-top">
+      <div class="brand">
+        <img class="lg" src="images/logo.jpg" alt="MHO">
+        <h1>魔物獵人 旅人助手</h1>
+        <span class="badge">J17</span>
+      </div>
+      <div class="srcbox">
+        <div><span id="genAt">更新 –</span>｜<span class="ver" id="verTxt"></span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TAB 1 -->
+  <section id="v-adv">
+    <div class="qbar"><span class="ico">🔍</span><input id="qAdv" type="search" placeholder="搜尋冒險者、定位、屬性"></div>
+    <div class="frow" id="fAdvRole"><span class="lbl">定位</span></div>
+    <div class="frow" id="fAdvEl"><span class="lbl">屬性</span></div>
+    <div class="count" id="cAdvList"></div>
+    <div class="grid" id="gAdv"></div>
+  </section>
+
+  <!-- TAB 2 -->
+  <section id="v-gear" style="display:none">
+    <div class="qbar"><span class="ico">🔍</span><input id="qGear" type="search" placeholder="搜尋裝備、套裝、技能"></div>
+    <div class="frow" id="fGearKind"><span class="lbl">類別</span></div>
+    <div class="frow" id="fGearExtra"></div>
+    <div class="frow" id="fGearEl"><span class="lbl">屬性</span></div>
+    <div class="count" id="cGearList"></div>
+    <div class="grid" id="gGear"></div>
+  </section>
+
+  <!-- TAB 3 -->
+  <section id="v-mon" style="display:none">
+    <div class="qbar"><span class="ico">🔍</span><input id="qMon" type="search" placeholder="搜尋魔物、種類、棲息地"></div>
+    <div class="frow" id="fMonSize"><span class="lbl">尺寸</span></div>
+    <div class="frow" id="fMonKind"><span class="lbl">種類</span></div>
+    <div class="count" id="cMonList"></div>
+    <div class="grid" id="gMon"></div>
+  </section>
+
+  <!-- TAB 4 -->
+  <section id="v-news" style="display:none">
+    <div class="count" id="cNews"></div>
+    <div id="gNews"></div>
+    <div class="nosrc" id="newsSrc"></div>
+  </section>
+</div>
+
+<nav class="tabs">
+  <div class="in">
+    <button class="tab on" data-v="adv"><span class="ti"><img src="images/reczz28W1fqrmNCp.webp" alt=""></span>冒險者</button>
+    <button class="tab" data-v="gear"><span class="ti">⚔️</span>武器防具</button>
+    <button class="tab" data-v="mon"><span class="ti"><img src="images/reczz28WqB6QiE7m_pict.png" alt=""></span>魔物</button>
+    <button class="tab" data-v="news"><span class="ti">📰</span>新聞</button>
+  </div>
+</nav>
+
+<div class="ov" id="ov">
+  <div class="bar"><button id="ovBack">← 返回</button><div class="ttl" id="ovTtl"></div></div>
+  <div class="body" id="ovBody"></div>
+</div>
+
+<script>
+(function(){
+  var DATA = null, NEWS = null;
+  var elMap = {'火':'el-fire','水':'el-water','雷':'el-thunder','冰':'el-ice','龍':'el-dragon','龙':'el-dragon'};
+  var ELCOLOR = {'火':'#ff7a45','水':'#4aa8ff','雷':'#f5d76e','冰':'#7fe0ff','龍':'#b58cff'};
+  var KIND_ICON = {weapon:'⚔️', armor:'🛡️'};
+  var WTYPE_ICON = {'大劍':'🗡️','太刀':'🗡️','雙劍':'⚔️','長槍':'🔱','大錘':'🔨','充能斧':'🪓','重弩槍':'🏹','弓':'🎯'};
+  var SLOT_ICON = {'頭部':'🪖','胸部':'🥋','腕部':'🧤','腰部':'🎽','腿部':'🥾'};
+
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function elTag(e){ if(!e) return ''; return '<span class="tg '+(elMap[e]||'')+'">'+esc(e)+'</span>'; }
+  function roleTag(r){ return r ? '<span class="tg role">'+esc(r)+'</span>' : ''; }
+  function thumb(img, ph, cls){
+    return '<div class="'+(cls||'thumb')+'">'+(img ? '<img loading="lazy" src="'+esc(img)+'" alt="">' : '<span class="ph">'+ph+'</span>')+'</div>';
+  }
+  function effChip(v){
+    var cls = v==='有效' ? 'good' : (v==='無效' ? 'bad' : 'mid');
+    return '<span class="effc '+cls+'">'+esc(v)+'</span>';
+  }
+  function traitChip(v){
+    var cls = {'大':'bad','中':'mid','小':'good','無':'gray'}[v] || 'mid';
+    return '<span class="effc '+cls+'">'+esc(v)+'</span>';
+  }
+  function weakDots(w){    var out='';
+    ['火','水','雷','冰','龍'].forEach(function(k){
+      var v = w ? (w[k]||0) : 0;
+      if(!v) return;
+      out += '<i class="w'+v+'"></i>';
+    });
+    return out ? '<div class="mon-weak">'+out+'</div>' : '';
+  }
+  function stars(v){
+    var n = typeof v === 'number' ? v : 0;
+    var cls = n>=3 ? 'on3' : (n===2 ? 'on2' : (n===1 ? 'on1' : ''));
+    var d='';
+    for(var i=0;i<3;i++) d += '<i class="'+(i<n?cls:'')+'"></i>';
+    return d;
+  }
+
+  /* matrix 表：同一形式的「3 格方塊 + 星數」 */
+  function mxRow(lb, color, n, right){
+    return '<div class="mr"><span class="mlb"'+(color?' style="color:'+color+'"':'')+'>'+esc(lb)+'</span>'+
+      '<span class="dots">'+stars(n)+'</span>'+
+      (right?'<span class="mrt">'+esc(right)+'</span>':'')+'</div>';
+  }
+  function mxGroup(t){
+    return '<div class="mgh">'+esc(t)+'</div>';
+  }
+  function mxMatrix(m){
+    var h = '<div class="mx">';
+    h += mxGroup('屬性弱點');
+    ['火','水','雷','冰','龍'].forEach(function(k){
+      var v = m.weak ? (m.weak[k]||0) : 0;
+      h += mxRow(k, ELCOLOR[k]||'#c9d1d9', v, v? v+' 星' : '無');
+    });
+
+    if(m.ailment){
+      h += mxGroup('異常弱點');
+      m.ailment.split('、').forEach(function(s){
+        var t = s.trim();
+        var mm = t.match(/([^ ]+)\s*(\d)星/);
+        if(mm) h += mxRow(mm[1], '', parseInt(mm[2],10), mm[2]+' 星');
+        else if(t) h += mxRow(t, '', 0, '');
+      });
+    }
+
+    if(m.items && (m.items['閃光彈']||m.items['音爆彈']||m.items['地洞'])){
+      h += mxGroup('道具／陷阱效果');
+      ['閃光彈','音爆彈','地洞'].forEach(function(k){
+        var v = m.items[k] || '';
+        if(!v) return;
+        var good = v.indexOf('有效') >= 0 && v.indexOf('無效') < 0;
+        h += mxRow(k, good?'#3fb950':'#f85149', good?3:0, v);
+      });
+    }
+
+    if(m.traits && (m.traits['咆哮']||m.traits['風壓']||m.traits['震動'])){
+      h += mxGroup('咆哮／風壓／震動');
+      ['咆哮','風壓','震動'].forEach(function(k){
+        var v = m.traits[k] || '';
+        if(!v) return;
+        var n = v==='大'?3:(v==='中'?2:(v==='小'?1:0));
+        h += mxRow(k, n?'#e6edf5':'#8b949e', n, v);
+      });
+    }
+
+    var parts = (m.parts||'').split('、').filter(function(x){ return x.trim(); });
+    if(parts.length){
+      h += mxGroup('肉質');
+      parts.forEach(function(p){
+        var t = p.trim();
+        var mm = t.match(/(.*?)\s*\(斬(\d)\/打(\d)\/彈(\d)\)/);
+        if(!mm){ h += '<div class="mr"><span class="mlb" style="width:auto">'+esc(t)+'</span></div>'; return; }
+        h += '<div class="mr sm"><span class="mlb">'+esc(mm[1])+'</span>'+
+          '<span class="pgrp"><span class="pl">斬</span><span class="dots">'+stars(parseInt(mm[2],10))+'</span></span>'+
+          '<span class="pgrp"><span class="pl">打</span><span class="dots">'+stars(parseInt(mm[3],10))+'</span></span>'+
+          '<span class="pgrp"><span class="pl">彈</span><span class="dots">'+stars(parseInt(mm[4],10))+'</span></span>'+
+          '<span class="mrt">'+(mm[2]+mm[3]+mm[4]).split('').join('/')+'</span></div>';
+      });
+    }
+    h += '</div>';
+    return h;
+  }
+  function relCards(kind, list, showV){
+    if(!list || !list.length) return '';
+    return '<div class="rel">'+list.map(function(x){
+      return '<div class="relc" data-'+kind+'="'+x.id+'">'+
+        '<div class="ri">'+(x.img?'<img loading="lazy" src="'+esc(x.img)+'" alt="">':'')+'</div>'+
+        '<div class="rn">'+esc(x.name)+(showV&&x.v!=null?'<div class="rv">'+x.v+' 星</div>':'')+'</div></div>';
+    }).join('')+'</div>';
+  }
+
+  var advState = {q:'', role:'', el:''};
+  function advFiltered(){
+    var q = advState.q.toLowerCase();
+    return DATA.adventurers.filter(function(a){
+      if(advState.role && (a.role||[]).indexOf(advState.role)<0) return false;
+      if(advState.el && (a.element||[]).indexOf(advState.el)<0) return false;
+      if(!q) return true;
+      var hay = [a.name, a.display, (a.role||[]).join(' '), (a.element||[]).join(' ')].join(' ').toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
+  }
+  function renderAdv(){
+    var list = advFiltered();
+    document.getElementById('cAdvList').textContent = list.length + ' / ' + DATA.adventurers.length + ' 位冒險者';
+    var g = document.getElementById('gAdv');
+    if(!list.length){ g.innerHTML = '<div class="empty" style="grid-column:1/-1">此條件下沒有冒險者<br><span class="chip rst" data-reset="adv">清除所有條件</span></div>'; return; }
+    g.innerHTML = list.map(function(a){
+      return '<div class="card" data-adv="'+a.id+'">'+
+        thumb(a.img, '🛡️')+
+        '<div class="bd"><div class="nm">'+esc(a.name)+'</div>'+
+        '<div class="mt">'+((a.weapons[0] ? esc(a.weapons[0].name) : '武器未收錄'))+'</div>'+
+        '<div class="tags">'+(a.element||[]).map(elTag).join('')+(a.role||[]).map(roleTag).join('')+'</div>'+
+        '</div></div>';
+    }).join('');
+  }
+  function buildAdvFilters(){
+    var roles = {}, els = {};
+    DATA.adventurers.forEach(function(a){ (a.role||[]).forEach(function(r){roles[r]=1}); (a.element||[]).forEach(function(e){els[e]=1}); });
+    var r = '<span class="lbl">定位</span><span class="chip on" data-role="">全部</span>';
+    Object.keys(roles).forEach(function(k){ r += '<span class="chip" data-role="'+esc(k)+'">'+esc(k)+'</span>'; });
+    document.getElementById('fAdvRole').innerHTML = r;
+    var e = '<span class="lbl">屬性</span><span class="chip on" data-el="">全部</span>';
+    Object.keys(els).forEach(function(k){ e += '<span class="chip" data-el="'+esc(k)+'">'+esc(k)+'</span>'; });
+    document.getElementById('fAdvEl').innerHTML = e;
+  }
+
+  function openAdv(id){
+    var a = DATA.adventurers.filter(function(x){return x.id===id})[0];
+    if(!a) return;
+    var h = '<div class="hero">'+thumb(a.img, '🛡️', 'im')+
+      '<div class="info"><h2>'+esc(a.name)+'</h2>'+
+      '<div class="chips">'+(a.element||[]).map(function(e){return '<span class="tg '+(elMap[e]||'')+'">'+esc(e)+'</span>'}).join('')+
+      (a.role||[]).map(roleTag).join('')+'</div>'+
+      '<div class="meta">'+
+        (a.owned ? '擁有日期：'+esc(a.owned)+'<br>' : '')+
+        '武器 '+(a.weapons||[]).length+' ／ 防具 '+(a.armors||[]).length+' ／ 隨從 '+(a.pals||[]).length+
+      '</div></div></div>';
+    var links = [];
+    if(a.guide) links.push('<a class="btn" href="'+esc(linkOf(a.guide))+'" target="_blank" rel="noopener">📖 攻略</a>');
+    if(a.trailer) links.push('<a class="btn" href="'+esc(linkOf(a.trailer))+'" target="_blank" rel="noopener">▶️ 介紹影片</a>');
+    if(links.length) h += '<div class="acts">'+links.join('')+'</div>';
+
+    if(a.teams && a.teams.length){
+      h += '<div class="sect"><h3>所屬隊伍</h3><div class="kv">'+
+        a.teams.map(function(t){ return '<b>'+esc(t.name)+'</b>（'+esc(t.label)+'）'+(t.lead?' <span class="tg role">主控</span>':''); }).join('<br>')+
+        '</div></div>';
+    }
+
+    h += '<div class="sect"><h3>武器詳細 <span>'+(a.weapons||[]).length+' 件</span></h3>';
+    if(!(a.weapons||[]).length){ h += '<div class="empty">尚未收錄武器</div>'; }
+    else {
+      h += '<div class="rows">'+a.weapons.map(function(w){
+        return '<div class="row" data-gear="'+w.id+'">'+thumb(w.img, WTYPE_ICON[w.wtype]||'⚔️','rim')+
+          '<div class="rb"><div class="rrn">'+esc(w.name)+'</div>'+
+          '<div class="rmt">'+esc(w.wtype||'武器')+(w.atk?'｜攻擊力 '+esc(w.atk):'')+(w.element?'｜'+esc(w.element)+'屬性':'')+(w.sharp?'｜鋒利度 '+esc(w.sharp):'')+'</div>'+
+          (w.skills&&w.skills.length?'<div class="rsk">'+w.skills.map(function(s){return '<span class="tg">'+esc(s)+'</span>'}).join('')+'</div>':'')+
+          '</div></div>';
+      }).join('')+'</div>';
+    }
+    h += '</div>';
+
+    h += '<div class="sect"><h3>裝備詳細 <span>'+(a.armors||[]).length+' 件</span></h3>';
+    if(!(a.armors||[]).length){ h += '<div class="empty">尚未收錄防具</div>'; }
+    else {
+      var order = {'頭部':0,'胸部':1,'腕部':2,'腰部':3,'腿部':4};
+      var sorted = a.armors.slice().sort(function(x,y){ return (order[x.slot]==null?99:order[x.slot]) - (order[y.slot]==null?99:order[y.slot]); });
+      h += '<div class="rows">'+sorted.map(function(w){
+        return '<div class="row" data-gear="'+w.id+'">'+thumb(w.img, SLOT_ICON[w.slot]||'🛡️','rim')+
+          '<div class="rb"><div class="rrn">'+esc(w.name)+'</div>'+
+          '<div class="rmt">'+(w.slot?esc(w.slot):'')+(w.def!=null?'｜防禦力 '+esc(w.def):'')+(w.set?'｜套裝 '+esc(w.set):'')+'</div>'+
+          (w.skills&&w.skills.length?'<div class="rsk">'+w.skills.map(function(s){return '<span class="tg">'+esc(s)+'</span>'}).join('')+'</div>':'')+
+          '</div></div>';
+      }).join('')+'</div>';
+    }
+    h += '</div>';
+
+    h += '<div class="sect"><h3>隨從 <span>'+(a.pals||[]).length+' 位</span></h3>';
+    if(!(a.pals||[]).length){ h += '<div class="empty">尚未收錄隨從</div>'; }
+    else {
+      h += '<div class="rows">'+a.pals.map(function(p){
+        return '<div class="row">'+thumb(p.img,'🐱','rim')+
+          '<div class="rb"><div class="rrn">'+esc(p.name)+'</div>'+
+          '<div class="rmt">'+esc(p.kind||'')+(p.role?'｜'+esc(p.role):'')+(p.maxAtk?'｜最大攻擊力 '+esc(p.maxAtk):'')+'</div>'+
+          (p.skill?'<div class="rmt">技能：'+esc(p.skill)+'</div>':'')+
+          '</div></div>';
+      }).join('')+'</div>';
+    }
+    h += '</div>';
+
+    if((a.counterMon && a.counterMon.length) || (a.hardMon && a.hardMon.length)){
+      h += '<div class="sect"><h3>能剋制的魔物 <span>'+(a.counterMon||[]).length+' 隻</span></h3>'+
+        (a.counterMon&&a.counterMon.length ? relCards('mon', a.counterMon, true) : '<div class="empty">暫無資料</div>')+'</div>';
+      h += '<div class="sect"><h3>難打的魔物 <span>'+(a.hardMon||[]).length+' 隻</span></h3>'+
+        (a.hardMon&&a.hardMon.length ? relCards('mon', a.hardMon, false) : '<div class="empty">暫無資料</div>')+'</div>';
+    }
+    showOverlay(a.name, h);
+  }
+
+  /* ---------- TAB 2 武器／防具 ---------- */
+  var gearState = {q:'', kind:'all', wtype:'', slot:'', el:''};
+  function gearFiltered(){
+    var q = gearState.q.toLowerCase();
+    return DATA.gear.filter(function(g){
+      if(gearState.kind==='weapon' && g.kind!=='weapon') return false;
+      if(gearState.kind==='armor' && g.kind!=='armor') return false;
+      if(gearState.wtype && g.wtype!==gearState.wtype) return false;
+      if(gearState.slot && g.slot!==gearState.slot) return false;
+      if(gearState.el && g.element!==gearState.el) return false;
+      if(!q) return true;
+      var hay = [g.name, g.wtype, g.slot, g.set, g.setSkill, g.element, (g.skills||[]).join(' ')].join(' ').toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
+  }
+  function gearMeta(g){
+    if(g.kind==='weapon') return (g.wtype||'武器')+(g.atk?' · 攻 '+g.atk:'')+(g.element?' · '+g.element:'');
+    if(g.kind==='armor') return (g.slot||'防具')+(g.def!=null?' · 防 '+g.def:'')+(g.set?' · '+g.set:'');
+    return '';
+  }
+  function renderGear(){
+    var list = gearFiltered();
+    document.getElementById('cGearList').textContent = list.length + ' 件（共 ' + DATA.counts.weapons + ' 武器 / ' + DATA.counts.armors + ' 防具）';
+    var g = document.getElementById('gGear');
+    if(!list.length){ g.innerHTML = '<div class="empty" style="grid-column:1/-1">此條件下沒有裝備<br><span class="chip rst" data-reset="gear">清除所有條件</span></div>'; return; }
+    var limit = list.length > 400 ? 240 : list.length;
+    g.innerHTML = list.slice(0, limit).map(function(x){
+      return '<div class="card" data-gear="'+x.id+'">'+
+        thumb(x.img, KIND_ICON[x.kind] || '🎒')+
+        '<div class="bd"><div class="nm">'+esc(x.name)+'</div>'+
+        '<div class="mt">'+esc(gearMeta(x))+'</div>'+
+        '<div class="tags">'+elTag(x.element)+(x.kind==='armor'&&x.set?'<span class="tg">'+esc(x.set)+'</span>':'')+'</div>'+
+        '</div></div>';
+    }).join('') + (list.length > limit ? '<div class="empty" style="grid-column:1/-1">另有 '+(list.length-limit)+' 件，請用搜尋／篩選收窄</div>' : '');
+  }
+  function buildGearFilters(){
+    var kinds = [['all','全部'],['weapon','武器'],['armor','防具']];
+    document.getElementById('fGearKind').innerHTML = '<span class="lbl">類別</span>'+kinds.map(function(k){
+      return '<span class="chip'+(gearState.kind===k[0]?' on':'')+'" data-kind="'+k[0]+'">'+k[1]+'</span>';
+    }).join('');
+    var extra = '';
+    if(gearState.kind!=='armor'){
+      var wt = {};
+      DATA.gear.forEach(function(g){ if(g.wtype) wt[g.wtype]=1; });
+      extra += '<div class="fg"><span class="lbl">武器</span><span class="chip'+(gearState.wtype?'':' on')+'" data-wt="">全部</span>';
+      Object.keys(wt).forEach(function(k){ extra += '<span class="chip'+(gearState.wtype===k?' on':'')+'" data-wt="'+esc(k)+'">'+esc(k)+'</span>'; });
+      extra += '</div>';
+    }
+    if(gearState.kind!=='weapon'){
+      var sl = {'頭部':1,'胸部':1,'腕部':1,'腰部':1,'腿部':1};
+      extra += '<div class="fg"><span class="lbl">部位</span><span class="chip'+(gearState.slot?'':' on')+'" data-slot="">全部</span>';
+      Object.keys(sl).forEach(function(k){ extra += '<span class="chip'+(gearState.slot===k?' on':'')+'" data-slot="'+esc(k)+'">'+esc(k)+'</span>'; });
+      extra += '</div>';
+    }
+    document.getElementById('fGearExtra').innerHTML = extra;
+    var els = {};
+    DATA.gear.forEach(function(g){ if(g.element) els[g.element]=1 });
+    document.getElementById('fGearEl').innerHTML = '<span class="lbl">屬性</span><span class="chip'+(gearState.el?'':' on')+'" data-gel="">全部</span>'+
+      Object.keys(els).map(function(k){ return '<span class="chip'+(gearState.el===k?' on':'')+'" data-gel="'+esc(k)+'">'+esc(k)+'</span>' }).join('');
+  }
+
+  function openGear(id){
+    var g = DATA.gear.filter(function(x){return x.id===id})[0];
+    if(!g) return;
+    var h = '<div class="hero">'+thumb(g.img, KIND_ICON[g.kind]||'🎒','im')+
+      '<div class="info"><h2>'+esc(g.name)+'</h2>'+
+      '<div class="chips">'+(g.kind==='weapon'?'<span class="tg role">武器</span>':'<span class="tg role">防具</span>')+
+      (g.element?elTag(g.element):'')+(g.wtype?'<span class="tg">'+esc(g.wtype)+'</span>':'')+(g.slot?'<span class="tg">'+esc(g.slot)+'</span>':'')+'</div></div></div>';
+    var stats = [];
+    if(g.atk) stats.push(['攻擊力', g.atk]);
+    if(g.def!=null) stats.push(['防禦力', g.def]);
+    if(g.element) stats.push(['屬性', g.element]);
+    if(g.sharp) stats.push(['鋒利度', g.sharp]);
+    if(g.wtype) stats.push(['武器種類', g.wtype]);
+    if(g.slot) stats.push(['部位', g.slot]);
+    if(g.set) stats.push(['套裝', g.set]);
+    if(stats.length) h += '<div class="stat">'+stats.map(function(s){ return '<div><div class="k">'+esc(s[0])+'</div><div class="v">'+esc(s[1])+'</div></div>' }).join('')+'</div>';
+    if(g.setSkill) h += '<div class="sect"><h3>套裝技能</h3><div class="kv">'+esc(g.setSkill)+'</div></div>';
+    h += '<div class="sect"><h3>技能 <span>'+(g.skills||[]).length+'</span></h3>'+
+      ((g.skills&&g.skills.length) ? '<div class="kv">'+g.skills.map(function(s){ return '· '+esc(s) }).join('<br>')+'</div>' : '<div class="empty">未收錄技能</div>')+
+      '</div>';
+    showOverlay(g.name, h);
+  }
+
+  /* ---------- TAB 3 魔物 ---------- */
+  var monState = {q:'', size:'', kind:''};
+  function monFiltered(){
+    var q = monState.q.toLowerCase();
+    return DATA.monsters.filter(function(m){
+      if(monState.size && m.size!==monState.size) return false;
+      if(monState.kind && m.kind!==monState.kind) return false;
+      if(!q) return true;
+      var hay = [m.name, m.kind, m.size, m.habitat, m.ailment].join(' ').toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
+  }
+  function renderMon(){
+    var list = monFiltered();
+    document.getElementById('cMonList').textContent = list.length + ' / ' + DATA.monsters.length + ' 隻魔物';
+    var g = document.getElementById('gMon');
+    if(!list.length){ g.innerHTML = '<div class="empty" style="grid-column:1/-1">此條件下沒有魔物<br><span class="chip rst" data-reset="mon">清除所有條件</span></div>'; return; }
+    g.innerHTML = list.map(function(m){
+      return '<div class="card" data-mon="'+m.id+'">'+
+        thumb(m.img, '🐲')+
+        '<div class="bd"><div class="nm">'+esc(m.name)+'</div>'+
+        '<div class="mt">'+esc(m.kind||'')+(m.size?' · '+esc(m.size):'')+'</div>'+
+        weakDots(m.weak)+
+        '</div></div>';
+    }).join('');
+  }
+  function buildMonFilters(){
+    var sizes={}, kinds={};
+    DATA.monsters.forEach(function(m){ if(m.size)sizes[m.size]=1; if(m.kind)kinds[m.kind]=1 });
+    document.getElementById('fMonSize').innerHTML = '<span class="lbl">尺寸</span><span class="chip on" data-size="">全部</span>'+
+      Object.keys(sizes).map(function(k){ return '<span class="chip" data-size="'+esc(k)+'">'+esc(k)+'</span>' }).join('');
+    document.getElementById('fMonKind').innerHTML = '<span class="lbl">種類</span><span class="chip on" data-mkind="">全部</span>'+
+      Object.keys(kinds).map(function(k){ return '<span class="chip" data-mkind="'+esc(k)+'">'+esc(k)+'</span>' }).join('');
+  }
+  function openMon(id){
+    var m = DATA.monsters.filter(function(x){return x.id===id})[0];
+    if(!m) return;
+    var h = '<div class="hero">'+thumb(m.img,'🐲','im')+
+      '<div class="info"><h2>'+esc(m.name)+'</h2>'+
+      '<div class="chips">'+(m.kind?'<span class="tg role">'+esc(m.kind)+'</span>':'')+(m.size?'<span class="tg">'+esc(m.size)+'</span>':'')+'</div>'+
+      (m.habitat?'<div class="meta">棲息地：'+esc(m.habitat)+'</div>':'')+
+      '</div></div>';
+    h += '<div class="sect"><h3>屬性・異常・道具・肉質</h3>'+mxMatrix(m)+'</div>';
+    if(m.ailmentAtk) h += '<div class="sect"><h3>異常狀態攻擊</h3><div class="kv">'+esc(m.ailmentAtk)+'</div></div>';
+    if(m.breakable) h += '<div class="sect"><h3>可破壞部位</h3><div class="kv">'+
+      esc(m.breakable).split(' / ').map(function(p){ return '· '+p }).join('<br>')+'</div></div>';
+    if((m.counterAdv && m.counterAdv.length) || (m.counteredAdv && m.counteredAdv.length)){
+      h += '<div class="sect"><h3>能制剋牠的冒險者 <span>'+(m.counterAdv||[]).length+' 位</span></h3>'+
+        (m.counterAdv&&m.counterAdv.length ? relCards('adv', m.counterAdv, false) : '<div class="empty">暫無資料</div>')+'</div>';
+      h += '<div class="sect"><h3>被牠剋制的冒險者 <span>'+(m.counteredAdv||[]).length+' 位</span></h3>'+
+        (m.counteredAdv&&m.counteredAdv.length ? relCards('adv', m.counteredAdv, false) : '<div class="empty">暫無資料</div>')+'</div>';
+    }
+    showOverlay(m.name, h);
+  }
+
+  /* ---------- TAB 4 新聞 ---------- */
+  function renderNews(){
+    var g = document.getElementById('gNews');
+    var srcBox = document.getElementById('newsSrc');
+    if(!NEWS || !NEWS.items || !NEWS.items.length){
+      document.getElementById('cNews').textContent = '新聞';
+      g.innerHTML = '<div class="empty">暫無新聞：News Feed List 內未見可抓取的 J17 來源</div>';
+      srcBox.innerHTML = NEWS && NEWS.sources ? '已檢查來源：'+NEWS.sources.map(function(s){ return esc(s.name)+'（'+esc(s.type)+'）' }).join('、') : '';
+      return;
+    }
+    document.getElementById('cNews').textContent = NEWS.count + ' 條新聞｜' + NEWS.generated + ' 更新';
+    var groups = {};
+    NEWS.items.forEach(function(n){
+      var d = n.date || '未標示日期';
+      (groups[d] = groups[d] || []).push(n);
+    });
+    var keys = Object.keys(groups).sort(function(a,b){
+      if(a==='未標示日期') return 1; if(b==='未標示日期') return -1; return b.localeCompare(a);
+    });
+    g.innerHTML = keys.map(function(d){
+      return '<div class="nday"><div class="dh"><span>'+esc(d)+'</span><span>'+groups[d].length+' 條</span></div>'+
+        groups[d].map(function(n){
+          return '<a class="ncard" href="'+esc(n.link)+'" target="_blank" rel="noopener">'+
+            '<div class="ni">'+(n.img?'<img loading="lazy" src="'+esc(n.img)+'" alt="">':'')+'</div>'+
+            '<div class="nb"><div class="nt">'+esc(n.title)+'</div>'+
+            '<div class="nm2"><span class="cat">'+esc(n.cat)+'</span><span class="src">'+esc(n.src||'')+'</span><span class="go">開啟 →</span></div>'+
+            '</div></a>';
+        }).join('')+'</div>';
+    }).join('');
+    srcBox.innerHTML = '來源：' + (NEWS.sources||[]).map(function(s){
+      return '<a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.name)+'（'+esc(s.type)+'）</a>';
+    }).join('、') + '｜共 '+((NEWS.sources||[]).length)+' 個 Feed';
+  }
+
+  /* ---------- overlay ---------- */
+  var ovStack = [];
+  function showOverlay(title, html){
+    var ov = document.getElementById('ov');
+    ovStack.push({t:title, h:html});
+    document.getElementById('ovTtl').textContent = title;
+    document.getElementById('ovBody').innerHTML = html;
+    ov.classList.add('show');
+    ov.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+  function hideOverlay(){
+    var ov = document.getElementById('ov');
+    ovStack = [];
+    ov.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('ovBack').addEventListener('click', hideOverlay);
+
+  /* ---------- tabs ---------- */
+  var views = {adv:'v-adv', gear:'v-gear', mon:'v-mon', news:'v-news'};
+  document.querySelectorAll('.tab').forEach(function(b){
+    b.addEventListener('click', function(){
+      var v = b.getAttribute('data-v');
+      document.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('on', x===b) });
+      Object.keys(views).forEach(function(k){ document.getElementById(views[k]).style.display = (k===v?'':'none') });
+      window.scrollTo(0,0);
+    });
+  });
+
+  /* ---------- events ---------- */
+  function bindSearch(inputId, state, key, render){
+    var t = null;
+    document.getElementById(inputId).addEventListener('input', function(e){
+      clearTimeout(t);
+      var v = e.target.value;
+      t = setTimeout(function(){ state[key] = v.trim(); render(); }, 180);
+    });
+  }
+  function bindChips(containerId, attr, state, key, render, rebuild){
+    var box = document.getElementById(containerId);
+    box.addEventListener('click', function(e){
+      var c = e.target.closest('.chip');
+      if(!c || !box.contains(c)) return;
+      var v = c.getAttribute('data-'+attr) || '';
+      state[key] = v;
+      if(rebuild) rebuild();
+      render();
+    });
+  }
+
+  function linkOf(md){
+    var m = /\((https?:\/\/[^)]+)\)/.exec(md || '');
+    return m ? m[1] : (md || '');
+  }
+
+  function bind() {
+    bindSearch('qAdv', advState, 'q', renderAdv);
+    bindChips('fAdvRole', 'role', advState, 'role', renderAdv, buildAdvFilters);
+    bindChips('fAdvEl', 'el', advState, 'el', renderAdv, buildAdvFilters);
+
+    bindSearch('qGear', gearState, 'q', renderGear);
+    bindChips('fGearKind', 'kind', gearState, 'kind', function(){ gearState.wtype=''; gearState.slot=''; buildGearFilters(); renderGear(); }, buildGearFilters);
+    bindChips('fGearExtra', 'wt', gearState, 'wtype', renderGear, buildGearFilters);
+    bindChips('fGearExtra', 'slot', gearState, 'slot', renderGear, buildGearFilters);
+    bindChips('fGearEl', 'gel', gearState, 'el', renderGear, buildGearFilters);
+
+    bindSearch('qMon', monState, 'q', renderMon);
+    bindChips('fMonSize', 'size', monState, 'size', renderMon, null);
+    bindChips('fMonKind', 'mkind', monState, 'kind', renderMon, null);
+
+    document.addEventListener('click', function(e){
+      var rs = e.target.closest('[data-reset]');
+      if(rs){
+        var which = rs.getAttribute('data-reset');
+        if(which==='gear'){
+          gearState = {q:'', kind:'all', wtype:'', slot:'', el:''};
+          document.getElementById('qGear').value='';
+          buildGearFilters(); renderGear();
+        } else if(which==='adv'){
+          advState = {q:'', role:'', el:''};
+          document.getElementById('qAdv').value='';
+          buildAdvFilters(); renderAdv();
+        } else if(which==='mon'){
+          monState = {q:'', size:'', kind:''};
+          document.getElementById('qMon').value='';
+          buildMonFilters(); renderMon();
+        }
+        return;
+      }
+      var c = e.target.closest('[data-adv],[data-gear],[data-mon]');
+      if(!c) return;
+      if(e.target.closest('a')) return;
+      if(c.getAttribute('data-adv')) openAdv(c.getAttribute('data-adv'));
+      else if(c.getAttribute('data-gear')) openGear(c.getAttribute('data-gear'));
+      else if(c.getAttribute('data-mon')) openMon(c.getAttribute('data-mon'));
+    });
+  }
+
+  /* ---------- boot ---------- */
+  function fail(msg){
+    document.getElementById('gAdv').innerHTML = '';
+    document.querySelector('.wrap').insertAdjacentHTML('afterbegin',
+      '<div class="err">載入資料失敗：'+esc(msg)+'<br>請用 localhost（例如 <b>python -m http.server 8792</b>）開啟，或先執行 build_data.py／build_news.py。<br><a href="./data.json">data.json</a></div>');
+  }
+  function boot(){
+    var ts = '?t=' + Date.now();
+    Promise.all([
+      fetch('data.json' + ts).then(function(r){ if(!r.ok) throw new Error('data.json HTTP '+r.status); return r.json() }),
+      fetch('news-cache.json' + ts).then(function(r){ return r.ok ? r.json() : null }).catch(function(){ return null })
+    ]).then(function(res){
+      DATA = res[0]; NEWS = res[1];
+      document.getElementById('genAt').textContent = '更新 ' + DATA.generated;
+      document.getElementById('verTxt').textContent = 'v' + (DATA.version || '2026.1.07');
+      buildAdvFilters(); buildGearFilters(); buildMonFilters();
+      renderAdv(); renderGear(); renderMon(); renderNews();
+      bind();
+    }).catch(function(err){ fail(err.message || String(err)); });
+  }
+  boot();
+})();
+</script>
+</body>
+</html>
