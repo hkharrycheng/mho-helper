@@ -1,0 +1,341 @@
+{
+ "app": "MHO",
+ "feed": "魔物獵人：旅人助手（J17）",
+ "jobId": "reczz28WqHQpirNP",
+ "sources": [
+  {
+   "name": "官方",
+   "type": "Webpage",
+   "url": "https://mho.garena.com/zh_tw",
+   "count": 7
+  },
+  {
+   "name": "官方",
+   "type": "Youtube",
+   "url": "https://www.youtube.com/@MHO_TW",
+   "count": 20
+  },
+  {
+   "name": "Tutorial",
+   "type": "Webpage",
+   "url": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles",
+   "count": 12
+  }
+ ],
+ "generated": "2026-11-08 09:40",
+ "count": 39,
+ "items": [
+  {
+   "title": "羈絆等級的提升方法與獎勵",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/bond-level-guide",
+   "date": "2026-11-06",
+   "img": "news-img/6c794da7427a055f.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "完美迴避的方法與訣竅",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/perfect-evade",
+   "date": "2026-11-06",
+   "img": "news-img/ce266a946919a5c8.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "百煉之證的高效提升方法",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/proof-of-mastery-guide",
+   "date": "2026-11-06",
+   "img": "news-img/824295438e2595fd.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "萬用心得券的取得方法與用途",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/universal-insight-tickets",
+   "date": "2026-11-06",
+   "img": "news-img/054acef3b6fb2f8a.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "鬥技大會攻略：獎勵、排行榜與技巧",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/arena",
+   "date": "2026-11-05",
+   "img": "news-img/83a8db52e732ef81.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "第 5 章攻略流程與開放內容",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/chapter-5-walkthrough",
+   "date": "2026-11-05",
+   "img": "news-img/e6b3ec3e6ef4b185.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "第 6 章攻略流程與開放內容",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/chapter-6-walkthrough",
+   "date": "2026-11-05",
+   "img": "",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "共鬥積分的取得方法與用途",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/co-op-points",
+   "date": "2026-11-05",
+   "img": "news-img/cfa02653bc6c60b9.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "緋亞何時實裝？封測時的性能",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/freya-release-date",
+   "date": "2026-11-05",
+   "img": "",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "巨龍鬥場的獎勵與攻略技巧",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/monster-challenge",
+   "date": "2026-11-05",
+   "img": "news-img/a1f6fb7c04aae276.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "光稜龍的弱點與攻略",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/ruger-aidal-guide",
+   "date": "2026-11-05",
+   "img": "news-img/ae094f3d3d9f35a3.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "試煉遠征一覽與各層獎勵",
+   "link": "https://gamewith.ai/monster-hunter-outlanders/zh-hant/articles/trial-expedition",
+   "date": "2026-11-05",
+   "img": "news-img/4f2d8f05b6f3d5cb.webp",
+   "cat": "攻略",
+   "src": "Tutorial"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜冒險者介紹影片｜克蕾絲",
+   "link": "https://www.youtube.com/watch?v=2ALl9t4PDO0",
+   "date": "2026-11-03",
+   "img": "news-img/c6741e49fe0fc6b6.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜冒險者介紹影片｜路加",
+   "link": "https://www.youtube.com/watch?v=3CWIokYNsws",
+   "date": "2026-11-01",
+   "img": "news-img/61de691ded5ccc39.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜武器介紹｜充能斧",
+   "link": "https://www.youtube.com/watch?v=fb8B5fGRyQc",
+   "date": "2026-10-30",
+   "img": "news-img/7a69afac131cf998.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜ 巴哈姆特 30 週年站聚影片回顧",
+   "link": "https://www.youtube.com/watch?v=w3f4cVM_LFc",
+   "date": "2026-10-30",
+   "img": "news-img/237c95a816654305.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "遊戲公約",
+   "link": "https://mho.garena.com/zh_tw/news/WQ44M7",
+   "date": "2026-10-29",
+   "img": "news-img/ceb83ec0b0afe98d.jpg",
+   "cat": "公告",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜狩獵解禁 地下街篇",
+   "link": "https://www.youtube.com/watch?v=JYPlp1YzS34",
+   "date": "2026-10-29",
+   "img": "news-img/e96618403fb23e82.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜狩獵解禁 餐廳篇",
+   "link": "https://www.youtube.com/watch?v=SAO9jAv6ZpE",
+   "date": "2026-10-29",
+   "img": "news-img/4e93d571cd1f098a.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜狩獵解禁 居家篇",
+   "link": "https://www.youtube.com/watch?v=j4qBuuFE0CI",
+   "date": "2026-10-29",
+   "img": "news-img/472001fda1e72645.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》開放預先下載",
+   "link": "https://mho.garena.com/zh_tw/news/ZY6544",
+   "date": "2026-10-28",
+   "img": "news-img/24ecb4d0f428068f.jpg",
+   "cat": "公告",
+   "src": "官方"
+  },
+  {
+   "title": "冒險者狩獵FAQ",
+   "link": "https://mho.garena.com/zh_tw/news/7BMD6R",
+   "date": "2026-10-28",
+   "img": "news-img/ceb83ec0b0afe98d.jpg",
+   "cat": "公告",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜今日，狩獵解禁！",
+   "link": "https://www.youtube.com/watch?v=Ee6S0lkxRU4",
+   "date": "2026-10-28",
+   "img": "news-img/33d0326dd35418bf.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜上市搶先看特別節目",
+   "link": "https://www.youtube.com/watch?v=44aiZKibpLw",
+   "date": "2026-10-28",
+   "img": "news-img/95ba2febd9aa337d.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜冒險者介紹影片｜彌多律",
+   "link": "https://www.youtube.com/watch?v=PrkkKSJMvXY",
+   "date": "2026-10-27",
+   "img": "news-img/aab5c1bb9be18a00.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》社群活動規範",
+   "link": "https://mho.garena.com/zh_tw/news/Z6WPQJ",
+   "date": "2026-10-22",
+   "img": "news-img/ceb83ec0b0afe98d.jpg",
+   "cat": "社群",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜世界觀介紹｜製作與滑翔翼",
+   "link": "https://www.youtube.com/watch?v=uUuSOd-W4gc",
+   "date": "2026-10-19",
+   "img": "news-img/7f1fa66650cdc5c7.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜世界觀介紹｜建造系統",
+   "link": "https://www.youtube.com/watch?v=5beFLprMsQE",
+   "date": "2026-10-15",
+   "img": "news-img/d2ca76f216d76a25.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜冒險者介紹影片｜阿坎亞",
+   "link": "https://www.youtube.com/watch?v=4oSNxQOnsMo",
+   "date": "2026-10-09",
+   "img": "news-img/5f0184483824c8d6.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜魔物獵人系列製作人(CAPCOM)辻本良三祝福影片",
+   "link": "https://www.youtube.com/watch?v=jWYYSoQTxzY",
+   "date": "2026-10-09",
+   "img": "news-img/a71f3e0bfb042bee.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜《魔物獵人：旅人》製作人黃冬祝福影片",
+   "link": "https://www.youtube.com/watch?v=x4ruXZNvNZo",
+   "date": "2026-10-09",
+   "img": "news-img/102046385765a6f8.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜武器介紹｜大錘",
+   "link": "https://www.youtube.com/watch?v=uSMqv4jR8pY",
+   "date": "2026-10-09",
+   "img": "news-img/686972d5a2d9a07d.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜東京電玩展 2026 PV 公開！",
+   "link": "https://www.youtube.com/watch?v=YGAQihz9m9g",
+   "date": "2026-10-09",
+   "img": "news-img/509ba25895b1e969.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜冒險者介紹影片 | 炎囂",
+   "link": "https://www.youtube.com/watch?v=XKRm4KwARuA",
+   "date": "2026-09-09",
+   "img": "news-img/761eb938b808e76b.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜事前預約開跑！原創新魔物「光稜龍」解禁！",
+   "link": "https://www.youtube.com/watch?v=Cuj9o9BWuo0",
+   "date": "2026-09-09",
+   "img": "news-img/0291e4d636034e78.jpg",
+   "cat": "影片",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》原創新魔物・古龍種「光稜龍」於全球首度公開，同步開啟商店預約",
+   "link": "https://mho.garena.com/zh_tw/news/RN4YWN",
+   "date": "2026-08-31",
+   "img": "news-img/89aee557bd886818.jpg",
+   "cat": "新聞",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》網頁預約正式啟動！",
+   "link": "https://mho.garena.com/zh_tw/news/7UYZ6T",
+   "date": "2026-07-24",
+   "img": "news-img/b8e2d0213d92245d.jpeg",
+   "cat": "新聞",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》創作者內容規範",
+   "link": "https://mho.garena.com/zh_tw/news/2PEYQQ",
+   "date": "2026-07-01",
+   "img": "news-img/2fb2141b2dd3a3b4.jpg",
+   "cat": "社群",
+   "src": "官方"
+  },
+  {
+   "title": "《魔物獵人：旅人》｜世界觀介紹｜用餐系統",
+   "link": "https://www.youtube.com/watch?v=dQQdPWOlmME",
+   "date": "",
+   "img": "news-img/015e00761afcd882.jpg",
+   "cat": "影片",
+   "src": "官方"
+  }
+ ]
+}
