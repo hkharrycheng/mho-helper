@@ -83,9 +83,12 @@ MHO/
 ├─ build/
 │   ├─ build_data.py     讀 _raw/*.ndjson → data.json
 │   └─ build_news.py     讀 News Feed List（J17）→ news-cache.json + news-img/
-├─ _raw/                 各表 ndjson dump、除錯腳本（不影響前端）
+├─ _raw/                 各表 ndjson dump、除錯腳本（不影響前端；舊分頁／過期 dump 移去 _raw/old/）
 ├─ start-localhost.bat   啟動 localhost：8792
 └─ README.md
+
+GitHub repo 另有 `versions/<version>/` 版本快照（index.html / data.json / news-cache.json / README.md 四檔）：
+舊版沿用 `versions/v2026.1.07/`，2026.1.08 起由 `deploy_github.py` 自動建立 `versions/2026.1.08/`（不帶 v 前綴）。
 ```
 
 ## 重建資料
