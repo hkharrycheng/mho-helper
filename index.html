@@ -165,6 +165,11 @@
   .gal img{width:100%;height:100%;object-fit:cover;display:block}
   .gal .zi{position:absolute;right:5px;bottom:5px;background:rgba(10,14,20,.8);border:1px solid var(--line);border-radius:7px;font-size:11px;padding:1px 5px;color:#cfd8e3}
   .galhint{color:var(--muted);font-size:11px;margin-top:7px}
+  /* 魔物圖庫檢視 */
+  .galgrp{margin-bottom:14px}
+  .galgrp h4{margin:0 2px 7px;font-size:13px;font-weight:600;color:#e6edf5;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .galgrp h4 .nm{word-break:break-word}
+  .galgrp h4 span{color:var(--muted);font-size:11px;font-weight:400;white-space:nowrap}
   .lb{position:fixed;inset:0;z-index:60;background:rgba(4,7,12,.97);display:none;flex-direction:column}
   .lb.show{display:flex}
   .lb .lbbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;font-size:12px;color:var(--muted)}
@@ -234,10 +239,12 @@
   <!-- TAB 3 -->
   <section id="v-mon" style="display:none">
     <div class="qbar"><span class="ico">🔍</span><input id="qMon" type="search" placeholder="搜尋魔物、種類、棲息地"></div>
+    <div class="frow" id="fMonView"><span class="lbl">檢視</span></div>
     <div class="frow" id="fMonSize"><span class="lbl">尺寸</span></div>
     <div class="frow" id="fMonKind"><span class="lbl">種類</span></div>
     <div class="count" id="cMonList"></div>
     <div class="grid" id="gMon"></div>
+    <div id="gMonGal" style="display:none"></div>
   </section>
 
   <!-- TAB 4 -->
@@ -582,7 +589,7 @@
   }
 
   /* ---------- TAB 3 魔物 ---------- */
-  var monState = {q:'', size:'', kind:''};
+  var monState = {q:'', size:'', kind:'', view:'card'};
   function monFiltered(){
     var q = monState.q.toLowerCase();
     return DATA.monsters.filter(function(m){
@@ -595,8 +602,13 @@
   }
   function renderMon(){
     var list = monFiltered();
-    document.getElementById('cMonList').textContent = list.length + ' / ' + DATA.monsters.length + ' 隻魔物';
+    var isGal = monState.view === 'gallery';
     var g = document.getElementById('gMon');
+    var gal = document.getElementById('gMonGal');
+    g.style.display = isGal ? 'none' : '';
+    gal.style.display = isGal ? '' : 'none';
+    if(isGal){ renderMonGal(list); return; }
+    document.getElementById('cMonList').textContent = list.length + ' / ' + DATA.monsters.length + ' 隻魔物';
     if(!list.length){ g.innerHTML = '<div class="empty" style="grid-column:1/-1">此條件下沒有魔物<br><span class="chip rst" data-reset="mon">清除所有條件</span></div>'; return; }
     g.innerHTML = list.map(function(m){
       return '<div class="card" data-mon="'+m.id+'">'+
@@ -604,8 +616,35 @@
         '<div class="bd"><div class="nm">'+esc(m.name)+'</div>'+
         '<div class="mt">'+esc(m.kind||'')+(m.size?' · '+esc(m.size):'')+'</div>'+
         weakDots(m.weak)+
+        ((m.gallery&&m.gallery.length)?'<div class="mt">🖼 圖庫 '+m.gallery.length+' 張</div>':'')+
         '</div></div>';
     }).join('');
+  }
+  function renderMonGal(list){
+    var gal = document.getElementById('gMonGal');
+    var withG = list.filter(function(m){ return (m.gallery||[]).length; });
+    var total = withG.reduce(function(s,m){ return s + m.gallery.length; }, 0);
+    document.getElementById('cMonList').textContent = withG.length + ' 隻魔物有圖庫｜共 ' + total + ' 張圖（全庫 ' + (DATA.counts.monWithGallery||0) + ' 隻／' + (DATA.counts.monGallery||0) + ' 張）';
+    if(!withG.length){
+      gal.innerHTML = '<div class="empty">此條件下暫未有圖庫圖片<br><span class="chip rst" data-reset="mon">清除所有條件</span></div>';
+      return;
+    }
+    var h = withG.map(function(m){
+      return '<div class="galgrp"><h4><span class="nm">'+esc(m.name)+'</span><span>'+(m.kind?esc(m.kind)+(m.size?' · '+esc(m.size):'')+'｜':'')+m.gallery.length+' 張</span></h4>'+
+        '<div class="galgrid">'+m.gallery.map(function(p,i){
+          return '<div class="gal" data-mgal="'+m.id+'" data-i="'+i+'"><img loading="lazy" src="'+esc(p)+'" alt=""><span class="zi">放大</span></div>';
+        }).join('')+'</div>'+
+        '<div class="galhint"><span class="chip" data-mon="'+m.id+'">看魔物詳情</span></div></div>';
+    }).join('');
+    var rest = list.length - withG.length;
+    if(rest>0) h += '<div class="galhint">另有 '+rest+' 隻符合篩選的魔物暫未有圖庫圖片；切回「卡片」檢視可看牠們的資料。</div>';
+    gal.innerHTML = h;
+  }
+  function buildMonView(){
+    document.getElementById('fMonView').innerHTML = '<span class="lbl">檢視</span>'+
+      [['card','卡片'],['gallery','圖庫']].map(function(v){
+        return '<span class="chip'+(monState.view===v[0]?' on':'')+'" data-view="'+v[0]+'">'+v[1]+'</span>';
+      }).join('');
   }
   function buildMonFilters(){
     var sizes={}, kinds={};
@@ -632,6 +671,16 @@
         (m.counterAdv&&m.counterAdv.length ? relCards('adv', m.counterAdv, false) : '<div class="empty">暫無資料</div>')+'</div>';
       h += '<div class="sect"><h3>被牠剋制的冒險者 <span>'+(m.counteredAdv||[]).length+' 位</span></h3>'+
         (m.counteredAdv&&m.counteredAdv.length ? relCards('adv', m.counteredAdv, false) : '<div class="empty">暫無資料</div>')+'</div>';
+    }
+    galList = (m.gallery || []).slice();
+    if(galList.length){
+      h += '<div class="sect"><h3>圖庫 <span>'+galList.length+' 張</span></h3>'+
+        '<div class="galgrid">'+galList.map(function(g,i){
+          return '<div class="gal" data-gal="'+i+'"><img loading="lazy" src="'+esc(g)+'" alt=""><span class="zi">放大</span></div>';
+        }).join('')+'</div>'+
+        '<div class="galhint">按圖可放大觀看'+(galList.length>1?'，可左右切換':'')+'</div></div>';
+    } else {
+      h += '<div class="sect"><h3>圖庫</h3><div class="empty">此魔物尚未加入圖庫圖片（在 Base「魔物圖庫」欄上傳後重新 build 即可顯示）</div></div>';
     }
     showOverlay(m.name, h);
   }
@@ -758,6 +807,7 @@
     bindChips('fGearEl', 'gel', gearState, 'el', renderGear, buildGearFilters);
 
     bindSearch('qMon', monState, 'q', renderMon);
+    bindChips('fMonView', 'view', monState, 'view', renderMon, buildMonView);
     bindChips('fMonSize', 'size', monState, 'size', renderMon, null);
     bindChips('fMonKind', 'mkind', monState, 'kind', renderMon, null);
 
@@ -774,10 +824,17 @@
           document.getElementById('qAdv').value='';
           buildAdvFilters(); renderAdv();
         } else if(which==='mon'){
-          monState = {q:'', size:'', kind:''};
+          monState = {q:'', size:'', kind:'', view:monState.view};
           document.getElementById('qMon').value='';
-          buildMonFilters(); renderMon();
+          buildMonView(); buildMonFilters(); renderMon();
         }
+        return;
+      }
+      var mg = e.target.closest('[data-mgal]');
+      if(mg && !e.target.closest('#lb')){
+        var mid = mg.getAttribute('data-mgal');
+        var mm = DATA.monsters.filter(function(x){ return x.id===mid })[0];
+        if(mm){ galList = (mm.gallery||[]).slice(); openLB(+mg.getAttribute('data-i')); }
         return;
       }
       var g = e.target.closest('[data-gal]');
@@ -806,7 +863,7 @@
       DATA = res[0]; NEWS = res[1];
       document.getElementById('genAt').textContent = '更新 ' + DATA.generated;
       document.getElementById('verTxt').textContent = 'v' + (DATA.version || '2026.1.07');
-      buildAdvFilters(); buildGearFilters(); buildMonFilters();
+      buildAdvFilters(); buildGearFilters(); buildMonFilters(); buildMonView();
       renderAdv(); renderGear(); renderMon(); renderNews();
       bind();
     }).catch(function(err){ fail(err.message || String(err)); });

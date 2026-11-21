@@ -109,10 +109,17 @@ def team_of(rid):
 
 adv = []
 _gal = {}
+_mgal = {}
 for f in os.listdir(IMG):
-    m = __import__("re").match(r"^(rec\w*)_gal(\d+)(\.[A-Za-z0-9]+)$", f)
+    import re as _re
+    m = _re.match(r"^(rec\w*)_gal(\d+)(\.[A-Za-z0-9]+)$", f)
     if m:
         _gal.setdefault(m.group(1), []).append((int(m.group(2)), "images/" + f))
+        continue
+    # 魔物圖庫：<record_id>_mgal<n>.<ext>（由 Base「魔物圖庫」附件下載）
+    m = _re.match(r"^(rec\w*)_mgal(\d+)(\.[A-Za-z0-9]+)$", f)
+    if m:
+        _mgal.setdefault(m.group(1), []).append((int(m.group(2)), "images/" + f))
 for r in adventurers:
     rid = r["record_id"]
     adv.append({
@@ -160,6 +167,7 @@ for r in mon_rows:
             "地洞": (r.get("地洞") or [""])[0],
         },
         "img": image_map.get(rid),
+        "gallery": [p for _, p in sorted(_mgal.get(rid, []))],
     })
 
 ELS = ["火", "水", "雷", "冰", "龍"]
@@ -204,10 +212,12 @@ for m in mon:
 
 data = {
     "app": "MHO 魔物獵人：旅人助手",
-    "version": "2026.1.08",    "base": "RhuZbZCs0aJhdDsKvMicds5Hn0d",
+    "version": "2026.1.09",    "base": "RhuZbZCs0aJhdDsKvMicds5Hn0d",
     "generated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
     "counts": {"adventurers": len(adv), "weapons": sum(1 for g in gear if g["kind"] == "weapon"),
-               "armors": sum(1 for g in gear if g["kind"] == "armor"), "monsters": len(mon), "pals": len(pals)},
+               "armors": sum(1 for g in gear if g["kind"] == "armor"), "monsters": len(mon), "pals": len(pals),
+               "monGallery": sum(len(m["gallery"]) for m in mon),
+               "monWithGallery": sum(1 for m in mon if m["gallery"])},
     "adventurers": adv,
     "gear": gear,
     "pals": pals,
